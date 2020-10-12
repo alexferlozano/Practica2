@@ -14,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        return post::all();
     }
 
     /**
@@ -35,7 +35,8 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post = post::create($request->all());
+        return $post;
     }
 
     /**
@@ -67,9 +68,13 @@ class PostController extends Controller
      * @param  \App\post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, post $post)
+    public function update(Request $request, int $id)
     {
-        //
+        $post=post::findorFail($id);
+        $post->titulo = $request->has('titulo') ? $request->get('titulo') : $post->titulo;
+        $post->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $post->descripcion;
+        $post->autor = $request->has('autor') ? $request->get('autor') : $post->autor;
+        $post->save();
     }
 
     /**
@@ -78,8 +83,10 @@ class PostController extends Controller
      * @param  \App\post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(post $post)
+    public function destroy(int $id)
     {
-        //
+        $post = post::findorFail($id);
+        $post->delete();
+        return $post;
     }
 }

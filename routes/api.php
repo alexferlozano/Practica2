@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get("post","postController@index");
+Route::post("post","postController@store");
+Route::delete("post/{id}","postController@destroy")->where("id","[0-9]+");
+Route::put("post/{id}","postController@update")->where("id","[0-9]+");
+
+Route::get("post/{id}","postController@index");
+Route::post("post/{id}/comentarios","postController@store");
+Route::delete("post/{id}/comentarios/id2","postController@destroy")->where("id","[0-9]+");
+Route::put("post/{id}/comentarios/id2","postController@update")->where("id","[0-9]+");
