@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class comentario extends Model
 {
     protected $fillable = [
-        'descripcion','autor'
+        'post_id','descripcion','autor'
     ];
 }

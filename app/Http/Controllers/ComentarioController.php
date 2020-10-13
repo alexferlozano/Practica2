@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\comentario;
 use App\post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ComentarioController extends Controller
 {
@@ -34,11 +35,11 @@ class ComentarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,int $id)
     {
-        $post=post::findorFile($id);
-        $comentario=comentario::create(['post_id' => $post->id,
-                                        $request->all()
+        $post=post::findorFail($id);
+        DB::table('comentarios')->insertOrIgnore([
+            'post_id' => $post->id, 'descripcion' => $request->all()
         ]);
         return $comentario;
     }
@@ -51,7 +52,10 @@ class ComentarioController extends Controller
      */
     public function show(int $id)
     {
-        $post=post::findorFile($id);
+        $post=post::findorFail($id);
+        $comentario=DB::table('comentarios')->select('id','post_id','descripcion','autor')->where('post_id','=',$post->id)->get();
+        //$comentario=comentario::all()->where("post_id",$post->id);
+        return $comentario;
     }
 
     /**
