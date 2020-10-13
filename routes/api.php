@@ -19,7 +19,8 @@ Route::post("post","postController@store");
 Route::delete("post/{id}","postController@destroy")->where("id","[0-9]+");
 Route::put("post/{id}","postController@update")->where("id","[0-9]+");
 
-Route::get("post/{id}","postController@index");
-Route::post("post/{id}/comentarios","postController@store");
-Route::delete("post/{id}/comentarios/id2","postController@destroy")->where("id","[0-9]+");
-Route::put("post/{id}/comentarios/id2","postController@update")->where("id","[0-9]+");
+Route::get("comentarios","ComentarioController@index");
+Route::get("post/{id}/comentarios","ComentarioController@show")->where("id","[0-9]+");
+Route::post("post/{id}/comentarios","ComentarioController@store")->where("id","[0-9]+");
+Route::delete("post/{id}/comentarios/{id2}","ComentarioController@destroy")->where(["id"=>"[0-9]+","id2"=>"[0-9]+"]);
+Route::put("post/{id}/comentarios/{id2}","ComentarioController@update")->where(["id"=>"[0-9]+","id2"=>"[0-9]+"]);

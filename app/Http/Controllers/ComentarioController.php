@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\comentario;
+use App\post;
 use Illuminate\Http\Request;
 
 class ComentarioController extends Controller
@@ -14,7 +15,7 @@ class ComentarioController extends Controller
      */
     public function index()
     {
-        //
+        return comentario::all();
     }
 
     /**
@@ -35,7 +36,11 @@ class ComentarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post=post::findorFile($id);
+        $comentario=comentario::create(['post_id' => $post->id,
+                                        $request->all()
+        ]);
+        return $comentario;
     }
 
     /**
@@ -44,9 +49,9 @@ class ComentarioController extends Controller
      * @param  \App\comentario  $comentario
      * @return \Illuminate\Http\Response
      */
-    public function show(comentario $comentario)
+    public function show(int $id)
     {
-        //
+        $post=post::findorFile($id);
     }
 
     /**
