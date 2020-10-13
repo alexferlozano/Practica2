@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\comentario;
 use App\post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -86,6 +88,7 @@ class PostController extends Controller
     public function destroy(int $id)
     {
         $post = post::findorFail($id);
+        DB::table('comentarios')->where('post_id','=',$id)->delete();
         $post->delete();
         return $post;
     }
