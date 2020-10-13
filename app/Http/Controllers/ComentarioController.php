@@ -76,9 +76,14 @@ class ComentarioController extends Controller
      * @param  \App\comentario  $comentario
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, comentario $comentario)
+    public function update(Request $request, int $id,int $id2)
     {
-        //
+        $post=post::findorFail($id);
+        $comentario=comentario::findorFail($id2);
+        $comentario->post_id = $request->has('post_id') ? $request->get('post_id') : $comentario->post_id;
+        $comentario->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $comentario->descripcion;
+        $comentario->autor = $request->has('autor') ? $request->get('autor') : $comentario->autor;
+        $comentario->save();
     }
 
     /**
@@ -87,8 +92,11 @@ class ComentarioController extends Controller
      * @param  \App\comentario  $comentario
      * @return \Illuminate\Http\Response
      */
-    public function destroy(comentario $comentario)
+    public function destroy(int $id,int $id2)
     {
-        //
+        $post=post::findorFail($id);
+        $comentario=comentario::findorFail($id2);
+        $comentario->delete();
+        return $comentario;
     }
 }
