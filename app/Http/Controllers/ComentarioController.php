@@ -38,9 +38,7 @@ class ComentarioController extends Controller
     public function store(Request $request,int $id)
     {
         $post=post::findorFail($id);
-        DB::table('comentarios')->insertOrIgnore([
-            'post_id' => $post->id, 'descripcion' => $request->all()
-        ]);
+        $comentario=$post->comments()->create($request->all());
         return $comentario;
     }
 
