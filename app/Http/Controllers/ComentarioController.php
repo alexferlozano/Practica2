@@ -39,7 +39,7 @@ class ComentarioController extends Controller
     {
         $post=post::findorFail($id);
         $comentario=$post->comments()->create($request->all());
-        return $comentario;
+        return response()->json($comentario,200);
     }
 
     /**
@@ -53,7 +53,7 @@ class ComentarioController extends Controller
         $post=post::findorFail($id);
         $comentario=DB::table('comentarios')->select('id','post_id','descripcion','autor')->where('post_id','=',$post->id)->get();
         //$comentario=comentario::all()->where("post_id",$post->id);
-        return $comentario;
+        return response()->json($comentario,200);
     }
 
     /**
@@ -82,6 +82,7 @@ class ComentarioController extends Controller
         $comentario->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $comentario->descripcion;
         $comentario->autor = $request->has('autor') ? $request->get('autor') : $comentario->autor;
         $comentario->save();
+        return response()->json($comentario,200);
     }
 
     /**
@@ -95,6 +96,11 @@ class ComentarioController extends Controller
         $post=post::findorFail($id);
         $comentario=comentario::findorFail($id2);
         $comentario->delete();
-        return $comentario;
+        return response()->json($comentario,200);
+    }
+    public function buscar(int $id)
+    {
+        $comentario = comentario::findorFail($id);
+        return response()->json($comentario,200);
     }
 }

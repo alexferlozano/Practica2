@@ -38,7 +38,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $post = post::create($request->all());
-        return $post;
+        return response()->json($post,200);
     }
 
     /**
@@ -77,6 +77,8 @@ class PostController extends Controller
         $post->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $post->descripcion;
         $post->autor = $request->has('autor') ? $request->get('autor') : $post->autor;
         $post->save();
+
+        return response()->json($post,200);
     }
 
     /**
@@ -90,6 +92,11 @@ class PostController extends Controller
         $post = post::findorFail($id);
         DB::table('comentarios')->where('post_id','=',$id)->delete();
         $post->delete();
-        return $post;
+        return response()->json($post,200);
+    }
+    public function buscar(int $id)
+    {
+        $post = post::findorFail($id);
+        return response()->json($post,200);
     }
 }
