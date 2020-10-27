@@ -12,12 +12,14 @@ class AuthController extends Controller
     {
         $request->validate(
            [
+               'name'=>'required',
                'email'=>'required|email',
                'password'=>'required',
                'edad'=>'required'
            ]);
 
            $usuario= new User();
+           $usuario->name=$request->name;
            $usuario->email=$request->email;
            $usuario->password=Hash::make($request->password);
            $usuario->edad=$request->edad;
@@ -26,4 +28,27 @@ class AuthController extends Controller
             return abort(400,"Error al crear usuario");
     }
 
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+    
+        $user = User::where('email', $request->email)->first();
+    
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Las credenciales son incorrectas'],
+            ]);
+        }
+        $token=$user->createToken($request->email)->plainTextToken;
+        return response()->json(["token"=>$token],201);
+    }
+
+    public function logOut(Request $request)
+    {
+        $request->user()->tokens()->delete();
+        return response()->json(["token"=>$token],201);
+    }
 }

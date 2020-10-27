@@ -30,4 +30,5 @@ Route::put("post/{id}/comentarios/{id2}","ComentarioController@update")->where([
 Route::middleware('auth:sanctum')->get('/user','ApiAuth\AuthController@index');
 Route::middleware('auth:sanctum')->delete('/logout','ApiAuth\AuthController@logOut');
 
-Route::post("/registro","AuthController@registro")->middleware('edad', 'privilegio');
+Route::post("registro","AuthController@registro")->middleware('edad', 'privilegio');
+Route::post("login","AuthController@login");
