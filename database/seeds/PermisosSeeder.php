@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\permisos;
 
 class PermisosSeeder extends Seeder
 {
@@ -11,21 +12,16 @@ class PermisosSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('permisos')->insert([
-            'id'=>'1',
-            'permiso' => 'user:perfil'
-        ]);
-        DB::table('permisos')->insert([
-            'id'=>'1',
-            'permiso' => 'user:delete'
-        ]);
-        DB::table('permisos')->insert([
-            'id'=>'1',
-            'permiso' => 'user:admi'
-        ]);
-        DB::table('permisos')->insert([
-            'id'=>'1',
-            'permiso' => 'user:show'
-        ]);
+        permisos::create([
+        'permiso' => 'user:admi']);
+
+        permisos::create([
+        'permiso' => 'user:info']);
+
+        permisos::create([
+        'permiso' => 'user:delete']);
+
+        permisos::create([
+        'permiso' => 'admi:admi']);
     }
 }
