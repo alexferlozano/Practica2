@@ -42,7 +42,7 @@ class AuthController extends Controller
                 'email' => ['Las credenciales son incorrectas'],
             ]);
         }
-        $token=$user->createToken($request->email)->plainTextToken;
+        $token=$user->createToken($request->email,['user:info'])->plainTextToken;
         return response()->json(["token"=>$token],201);
     }
 
