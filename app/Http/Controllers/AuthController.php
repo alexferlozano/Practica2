@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\permisos;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -42,7 +44,16 @@ class AuthController extends Controller
                 'email' => ['Las credenciales son incorrectas'],
             ]);
         }
-        $token=$user->createToken($request->email,['user:info'])->plainTextToken;
+        if($user->rol='admin')
+        {
+            $array=DB::table('permisos')->select('permiso')->take(4)->get()->pluck('permiso')->toArray();
+            $token=$user->createToken($request->email,$array)->plainTextToken;
+        }
+        else
+        {
+            $token=$user->createToken($request->email,['user:info'])->plainTextToken;
+        }
+        
         return response()->json(["token"=>$token],201);
     }
 
