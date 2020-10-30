@@ -13,15 +13,24 @@ class PermisosSeeder extends Seeder
     public function run()
     {
         permisos::create([
-        'permiso' => 'user:admi']);
+        'permiso' => 'admi:delete']);
 
         permisos::create([
-        'permiso' => 'user:info']);
+        'permiso' => 'admi:list']);
 
         permisos::create([
-        'permiso' => 'user:delete']);
+        'permiso' => 'admi:permiso']);
 
         permisos::create([
-        'permiso' => 'admi:admi']);
+        'permiso' => 'user:perfil']);
+
+        permisos::create([
+        'permiso' => 'user:edit']);
+
+        permisos::create([
+            'permiso' => 'user:post']);
+    
+            permisos::create([
+            'permiso' => 'user:coment']);
     }
 }

@@ -44,21 +44,58 @@ class AuthController extends Controller
                 'email' => ['Las credenciales son incorrectas'],
             ]);
         }
-        if($user->rol='admin')
+        if($user->rol=='admin')
         {
-            $array=DB::table('permisos')->select('permiso')->take(4)->get()->pluck('permiso')->toArray();
+            $array=DB::table('permisos')->select('permiso')->take(7)->get()->pluck('permiso')->toArray();
             $token=$user->createToken($request->email,$array)->plainTextToken;
         }
         else
         {
-            $token=$user->createToken($request->email,['user:info'])->plainTextToken;
+            $array=DB::table('permisos')->select('permiso')->where('permiso','like','user%')->take(4)->get()->pluck('permiso')->toArray();
+            $token=$user->createToken($request->email,$array)->plainTextToken;
         }
-        
         return response()->json(["token"=>$token],201);
     }
 
     public function logout(Request $request)
     {
         return response()->json(["eliminados"=>$request->user()->tokens()->delete()],201);
+    }
+
+    public function usuarios(Request $request)
+    {
+        if($request->user()->tokenCan('admi:list'))
+            return response()->json(["Lista de usuarios"=>User::all()],200);
+        return abort(401,"Tienes 0 permiso de estar aqui"); 
+    }
+
+    public function eliminarUsuario(int $id,Request $request)
+    {
+        if($request->user()->tokenCan('admi:delete'))
+        {
+            $user=User::findorFail($id);
+            $user->tokens()->delete();
+            $user->delete();
+            return response()->json(["El usuario $user->name ha sido eliminado del sistema"],200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
+    }
+
+    public function editarPermiso(int $id,Request $request)
+    {
+        if($request->user()->tokenCan('admi:permiso'))
+        {
+            $user=User::findorFail($id);
+            $user->rol = $request->has('rol') ? $request->get('rol') : $comentario->rol;
+            $user->save();
+            return response()->json(["El usuario $user->name ha sido actualizado a administrador del sistema"],200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 }

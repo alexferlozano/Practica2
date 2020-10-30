@@ -29,6 +29,8 @@ Route::put("post/{id}/comentarios/{id2}","ComentarioController@update")->where([
 
 Route::middleware('auth:sanctum')->get('/user','AuthController@index');
 Route::middleware('auth:sanctum')->delete('/logout','AuthController@logout');
+Route::middleware('auth:sanctum')->get('/usuarios','AuthController@usuarios');
+Route::middleware('auth:sanctum')->delete('/usuarios/eliminar/{id}','AuthController@eliminarUsuario')->where(["id"=>"[0-9]+","id2"=>"[0-9]+"]);
 
 Route::post("registro","AuthController@registro")->middleware('edad', 'privilegio');
 Route::post("login","AuthController@login");
