@@ -62,7 +62,7 @@ class ComentarioController extends Controller
      * @param  \App\comentario  $comentario
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(int $id, Request $request)
     {
         if($request->user()->tokenCan('user:coment'))
         {
@@ -118,14 +118,14 @@ class ComentarioController extends Controller
      * @param  \App\comentario  $comentario
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id,int $id2)
+    public function destroy(int $id,int $id2,Request $request)
     {
         if($request->user()->tokenCan('admi:delete'))
         {
             $post=post::findorFail($id);
             $comentario=comentario::findorFail($id2);
             $comentario->delete();
-            return response()->json($comentario,200);
+            return response()->json("El comentario $comentario->id ha sido eliminado",200);
         }
         else
         {
