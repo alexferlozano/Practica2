@@ -84,14 +84,17 @@ class AuthController extends Controller
         }
     }
 
-    public function editarPermiso(int $id,Request $request)
+    public function editarDatos(Request $request,int $id)
     {
         if($request->user()->tokenCan('admi:permiso'))
         {
             $user=User::findorFail($id);
+            $user->name = $request->has('name') ? $request->get('name') : $user->name;
+            $user->email = $request->has('email') ? $request->get('email') : $user->email;
+            $user->edad = $request->has('edad') ? $request->get('edad') : $user->edad;
             $user->rol = $request->has('rol') ? $request->get('rol') : $comentario->rol;
             $user->save();
-            return response()->json(["El usuario $user->name ha sido actualizado a administrador del sistema"],200);
+            return response()->json($user,200);
         }
         else
         {
