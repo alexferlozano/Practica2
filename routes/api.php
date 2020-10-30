@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->get('/user','AuthController@index');
 Route::middleware('auth:sanctum')->delete('/logout','AuthController@logout');
 Route::middleware('auth:sanctum')->get('/usuarios','AuthController@usuarios');
 Route::middleware('auth:sanctum')->delete('/usuarios/eliminar/{id}','AuthController@eliminarUsuario')->where(["id"=>"[0-9]+","id2"=>"[0-9]+"]);
+Route::middleware('auth:sanctum')->put('/usuarios/editar/permiso/{id}','AuthController@editarPermiso')->where(["id"=>"[0-9]+","id2"=>"[0-9]+"]);
 
 Route::post("registro","AuthController@registro")->middleware('edad', 'privilegio');
 Route::post("login","AuthController@login");
