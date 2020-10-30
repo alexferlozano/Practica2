@@ -14,9 +14,16 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return post::all();
+        if($request->user()->tokenCan('user:post'))
+        {
+            return post::all(); 
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 
     /**
@@ -37,8 +44,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = post::create($request->all());
-        return response()->json($post,200);
+        if($request->user()->tokenCan('user:post'))
+        {
+            $post = post::create($request->all());
+            return response()->json($post,200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 
     /**
@@ -72,13 +86,19 @@ class PostController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $post=post::findorFail($id);
-        $post->titulo = $request->has('titulo') ? $request->get('titulo') : $post->titulo;
-        $post->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $post->descripcion;
-        $post->autor = $request->has('autor') ? $request->get('autor') : $post->autor;
-        $post->save();
-
-        return response()->json($post,200);
+        if($request->user()->tokenCan('user:post'))
+        {
+            $post=post::findorFail($id);
+            $post->titulo = $request->has('titulo') ? $request->get('titulo') : $post->titulo;
+            $post->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $post->descripcion;
+            $post->autor = $request->has('autor') ? $request->get('autor') : $post->autor;
+            $post->save();
+            return response()->json($post,200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 
     /**
@@ -87,16 +107,30 @@ class PostController extends Controller
      * @param  \App\post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id,Request $request)
     {
-        $post = post::findorFail($id);
-        DB::table('comentarios')->where('post_id','=',$id)->delete();
-        $post->delete();
-        return response()->json($post,200);
+        if($request->user()->tokenCan('admi:delete'))
+        {
+            $post = post::findorFail($id);
+            DB::table('comentarios')->where('post_id','=',$id)->delete();
+            $post->delete();
+            return response()->json("El post $post->titulo ha sido eliminado",200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
-    public function buscar(int $id)
+    public function buscar(int $id,Request $request)
     {
-        $post = post::findorFail($id);
-        return response()->json($post,200);
+        if($request->user()->tokenCan('user:post'))
+        {
+            $post = post::findorFail($id);
+            return response()->json($post,200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 }

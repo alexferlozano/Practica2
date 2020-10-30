@@ -14,9 +14,16 @@ class ComentarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return comentario::all();
+        if($request->user()->tokenCan('user:coment'))
+        {
+            return comentario::all();
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 
     /**
@@ -37,9 +44,16 @@ class ComentarioController extends Controller
      */
     public function store(Request $request,int $id)
     {
-        $post=post::findorFail($id);
-        $comentario=$post->comments()->create($request->all());
-        return response()->json($comentario,200);
+        if($request->user()->tokenCan('user:coment'))
+        {
+            $post=post::findorFail($id);
+            $comentario=$post->comments()->create($request->all());
+            return response()->json($comentario,200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 
     /**
@@ -50,10 +64,16 @@ class ComentarioController extends Controller
      */
     public function show(int $id)
     {
-        $post=post::findorFail($id);
-        $comentario=DB::table('comentarios')->select('id','post_id','descripcion','autor')->where('post_id','=',$post->id)->get();
-        //$comentario=comentario::all()->where("post_id",$post->id);
-        return response()->json($comentario,200);
+        if($request->user()->tokenCan('user:coment'))
+        {
+            $post=post::findorFail($id);
+            $comentario=DB::table('comentarios')->select('id','post_id','descripcion','autor')->where('post_id','=',$post->id)->get();
+            return response()->json($comentario,200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 
     /**
@@ -76,13 +96,20 @@ class ComentarioController extends Controller
      */
     public function update(Request $request, int $id,int $id2)
     {
-        $post=post::findorFail($id);
-        $comentario=comentario::findorFail($id2);
-        $comentario->post_id = $request->has('post_id') ? $request->get('post_id') : $comentario->post_id;
-        $comentario->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $comentario->descripcion;
-        $comentario->autor = $request->has('autor') ? $request->get('autor') : $comentario->autor;
-        $comentario->save();
-        return response()->json($comentario,200);
+        if($request->user()->tokenCan('user:coment'))
+        {
+            $post=post::findorFail($id);
+            $comentario=comentario::findorFail($id2);
+            $comentario->post_id = $request->has('post_id') ? $request->get('post_id') : $comentario->post_id;
+            $comentario->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $comentario->descripcion;
+            $comentario->autor = $request->has('autor') ? $request->get('autor') : $comentario->autor;
+            $comentario->save();
+            return response()->json($comentario,200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 
     /**
@@ -93,14 +120,28 @@ class ComentarioController extends Controller
      */
     public function destroy(int $id,int $id2)
     {
-        $post=post::findorFail($id);
-        $comentario=comentario::findorFail($id2);
-        $comentario->delete();
-        return response()->json($comentario,200);
+        if($request->user()->tokenCan('admi:delete'))
+        {
+            $post=post::findorFail($id);
+            $comentario=comentario::findorFail($id2);
+            $comentario->delete();
+            return response()->json($comentario,200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
-    public function buscar(int $id)
+    public function buscar(int $id,Request $request)
     {
-        $comentario = comentario::findorFail($id);
-        return response()->json($comentario,200);
+        if($request->user()->tokenCan('user:coment'))
+        {
+            $comentario = comentario::findorFail($id);
+            return response()->json($comentario,200);
+        }
+        else
+        {
+            return abort(401,"Tienes 0 permiso de estar aqui");
+        }
     }
 }
