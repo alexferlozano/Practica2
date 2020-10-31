@@ -32,9 +32,8 @@ Route::middleware('auth:sanctum')->delete('/logout','AuthController@logout');
 Route::middleware('auth:sanctum')->get('/usuarios','AuthController@usuarios');
 Route::middleware('auth:sanctum')->get('/usuarios/perfil','UserController@verPerfil');
 Route::middleware('auth:sanctum')->put('/usuarios/perfil/editar','UserController@editarDatos')->middleware('edad', 'privilegio');
-Route::middleware('auth:sanctum')->put('/usuarios/editar/{id}','AuthController@editarDatos')->where(["id"=>"[0-9]+","id2"=>"[0-9]+"])->middleware('edad', 'rol');
-Route::middleware('auth:sanctum')->delete('/usuarios/eliminar/{id}','AuthController@eliminarUsuario')->where(["id"=>"[0-9]+","id2"=>"[0-9]+"]);
-Route::middleware('auth:sanctum')->put('/usuarios/editar/permiso/{id}','AuthController@editarPermiso')->where(["id"=>"[0-9]+","id2"=>"[0-9]+"]);
+Route::middleware('auth:sanctum')->put('/usuarios/editar/{id}','AuthController@editarDatos')->where("id","[0-9]+")->middleware('edad', 'rol');
+Route::middleware('auth:sanctum')->delete('/usuarios/eliminar/{id}','AuthController@eliminarUsuario')->where("id","[0-9]+");
 
 Route::post("registro","AuthController@registro")->middleware('edad', 'privilegio');
 Route::post("login","AuthController@login");

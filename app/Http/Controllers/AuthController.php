@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\permisos;
 use Illuminate\Support\Facades\DB;
+use App\post;
+use App\comentario;
 
 class AuthController extends Controller
 {
@@ -75,8 +77,18 @@ class AuthController extends Controller
         {
             $user=User::findorFail($id);
             $user->tokens()->delete();
+            $post=post::where('user_id','=',$user->id);
+            if($post!=null)
+            {
+                $post->delete();
+            }
+            $comentario=comentario::where('user_id','=',$user->id);
+            if($comentario!=null)
+            {
+                $comentario->delete();
+            }
             $user->delete();
-            return response()->json(["El usuario $user->name ha sido eliminado del sistema"],200);
+            return response()->json(["El usuario $user->name ha sido eliminado del sistema","token"=>$user->tokens()->delete()],200);
         }
         else
         {
