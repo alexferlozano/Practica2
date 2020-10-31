@@ -108,7 +108,6 @@ class ComentarioController extends Controller
             $comentario=comentario::findorFail($id2);
             $comentario->post_id = $request->has('post_id') ? $request->get('post_id') : $comentario->post_id;
             $comentario->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $comentario->descripcion;
-            $comentario->autor = $request->has('autor') ? $request->get('autor') : $comentario->autor;
             $comentario->save();
             return response()->json($comentario,200);
         }
