@@ -46,7 +46,12 @@ class PostController extends Controller
     {
         if($request->user()->tokenCan('user:post'))
         {
-            $post = post::create($request->all());
+            $post = post::create([
+                'titulo'=>$request->titulo,
+                'user_id'=>$request->user()->id,
+                'descripcion'=>$request->descripcion,
+                'autor'=>$request->user()->name,
+            ]);
             return response()->json($post,200);
         }
         else
@@ -86,7 +91,7 @@ class PostController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        if($request->user()->tokenCan('user:post'))
+        if($request->user()->tokenCan('user:post') && post::findorFail($id)->user_id==$request->user()->id)
         {
             $post=post::findorFail($id);
             $post->titulo = $request->has('titulo') ? $request->get('titulo') : $post->titulo;

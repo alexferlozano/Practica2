@@ -47,7 +47,13 @@ class ComentarioController extends Controller
         if($request->user()->tokenCan('user:coment'))
         {
             $post=post::findorFail($id);
-            $comentario=$post->comments()->create($request->all());
+            $comentario=$post->comments()->create(
+                [
+                    'user_id'=>$request->user()->id,
+                    'descripcion'=>$request->descripcion,
+                    'autor'=>$request->user()->name
+                ]
+            );
             return response()->json($comentario,200);
         }
         else
@@ -96,9 +102,9 @@ class ComentarioController extends Controller
      */
     public function update(Request $request, int $id,int $id2)
     {
-        if($request->user()->tokenCan('user:coment'))
+        $post=post::findorFail($id);
+        if($request->user()->tokenCan('user:coment') && comentario::findorFail($id2)->user_id==$request->user()->id)
         {
-            $post=post::findorFail($id);
             $comentario=comentario::findorFail($id2);
             $comentario->post_id = $request->has('post_id') ? $request->get('post_id') : $comentario->post_id;
             $comentario->descripcion = $request->has('descripcion') ? $request->get('descripcion') : $comentario->descripcion;

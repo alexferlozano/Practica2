@@ -10,7 +10,11 @@ class comentario extends Model
     {
         return $this->belongsTo('App\post');
     }
+    public function user()
+    {
+        return $this->hasOne('App\User');
+    }
     protected $fillable = [
-        'post_id','descripcion','autor'
+        'post_id','user_id','descripcion','autor'
     ];
 }

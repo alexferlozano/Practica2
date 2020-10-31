@@ -10,7 +10,11 @@ class post extends Model
     {
         return $this->hasMany('App\comentario');
     }
+    public function user()
+    {
+        return $this->hasOne('App\User');
+    }
     protected $fillable = [
-        'titulo','descripcion','autor'
+        'titulo','user_id','descripcion','autor'
     ];
 }
